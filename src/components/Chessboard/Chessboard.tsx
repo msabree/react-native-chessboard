@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSharedValue, useAnimatedStyle} from 'react-native-reanimated';
+import {useSharedValue} from 'react-native-reanimated';
 import ChessSquare from '../ChessPiece/ChessPiece';
 import {FenPosition} from '../../types';
 import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';

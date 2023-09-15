@@ -9,7 +9,6 @@ import React from 'react';
 // import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   useColorScheme,
@@ -32,16 +31,12 @@ function App(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Chessboard />
-        </View>
-      </ScrollView>
+      <View
+        style={{
+          backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        }}>
+        <Chessboard />
+      </View>
     </SafeAreaView>
   );
 }

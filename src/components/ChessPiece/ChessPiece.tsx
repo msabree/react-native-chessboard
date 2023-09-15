@@ -1,6 +1,9 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
-import {PanGestureHandler} from 'react-native-gesture-handler';
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+} from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
   withSpring,
@@ -159,12 +162,14 @@ const ChessPiece = ({
     // <Animated.View key={board[row][col].square} style={chessSquare} />
     // <Animated.View key={board[row][col].square} style={chessSquare}>
     // {/* </Animated.View> */}
-    <PanGestureHandler onGestureEvent={panGesture}>
-      <Animated.Image
-        source={getImage(boardState.value[row][col])}
-        style={chessPiece}
-      />
-    </PanGestureHandler>
+    <GestureHandlerRootView>
+      <PanGestureHandler onGestureEvent={panGesture}>
+        <Animated.Image
+          source={getImage(boardState.value[row][col])}
+          style={chessPiece}
+        />
+      </PanGestureHandler>
+    </GestureHandlerRootView>
   );
 };
 
