@@ -9,8 +9,8 @@ import Animated, {
   useAnimatedReaction,
   SharedValue,
 } from 'react-native-reanimated';
-import {FenPosition} from '../../types';
-import {COLUMN_LENGTH, MARGIN} from '../../constants';
+import {FenPosition, Square} from '../../types';
+import {COLUMN_LENGTH, MARGIN, columns, rows} from '../../constants';
 import {getPosition, getSquare, getImage} from '../../utils';
 
 const SIZE = Dimensions.get('window').width / COLUMN_LENGTH - MARGIN;
@@ -23,18 +23,33 @@ const ChessPiece = ({
   squareToHighlight,
   value,
   trueIndex,
+  onPieceDrop,
+  position,
 }: ChessSquareProps) => {
-  const position = getPosition(trueIndex);
+  console.log(position.x);
   const translateX = useSharedValue(position.x);
   const translateY = useSharedValue(position.y);
 
   const isDragging = useSharedValue(false);
   const isHovered = useSharedValue(false);
 
+  const getSquareName = (square: number) => {
+    'worklet';
+
+    const rowIndex = Math.floor(square / COLUMN_LENGTH);
+    const colIndex = square % COLUMN_LENGTH;
+
+    if (rowIndex > 7 || colIndex > 7 || rowIndex < 0 || colIndex < 0) {
+      return '';
+    }
+
+    return (columns[colIndex as keyof typeof columns] +
+      rows[rowIndex as keyof typeof rows]) as Square;
+  };
+
   useAnimatedReaction(
     () => squareToHighlight.value,
     (square, oldSquare) => {
-      console.log(square, oldSquare);
       if (oldSquare === -1) {
         isHovered.value = false;
         return;
@@ -73,17 +88,19 @@ const ChessPiece = ({
 
       squareToHighlight.value = square;
     },
-    onFinish: (_event, _ctx) => {
+    onFinish: (event, ctx) => {
       squareToHighlight.value = -1;
       const center = {
         x: translateX.value + SIZE / 2,
         y: translateY.value + SIZE / 2,
       };
+      //@ts-ignore
+      const startingSquare = getSquare(ctx.startX, ctx.startY);
+      const startingSquareName = getSquareName(startingSquare);
       const square = getSquare(center.x, center.y);
-      const rowIndex = Math.floor(square / COLUMN_LENGTH);
-      const colIndex = square % COLUMN_LENGTH;
+      const squareName = getSquareName(square);
 
-      if (rowIndex > 7 || colIndex > 7 || rowIndex < 0 || colIndex < 0) {
+      if (!squareName || !startingSquareName) {
         // spring back to starting position
         translateX.value = withSpring(position.x);
         translateY.value = withSpring(position.y);
@@ -93,15 +110,8 @@ const ChessPiece = ({
         return;
       }
 
-      const oldBoardState = JSON.parse(JSON.stringify(boardState.value));
-      const newBoardState = JSON.parse(JSON.stringify(boardState.value));
-
-      newBoardState[rowIndex][colIndex] = boardState.value[row][col];
-      newBoardState[row][col] = '8';
-
-      if (oldBoardState.flat().join('') !== newBoardState.flat().join('')) {
-        boardState.value = newBoardState;
-
+      console.log('TF', startingSquareName, squareName);
+      if (onPieceDrop(startingSquareName, squareName)) {
         // snap to new position
         translateX.value = withSpring(getPosition(square).x);
         translateY.value = withSpring(getPosition(square).y);
@@ -124,7 +134,6 @@ const ChessPiece = ({
   const chessPiece = useAnimatedStyle(() => {
     const zIndex = isDragging.value ? 100 : 2;
     const scale = isDragging.value ? 1.2 : 1;
-    console.log(isHovered.value, isDragging.value);
     const backgroundColor = isHovered.value ? 'green' : 'transparent';
 
     return {
@@ -164,12 +173,9 @@ const ChessPiece = ({
       <></>
     )
   ) : (
-    // <Animated.View key={board[row][col].square} style={chessSquare} />
-    // <Animated.View key={board[row][col].square} style={chessSquare}>
-    // {/* </Animated.View> */}
     <PanGestureHandler onGestureEvent={panGesture}>
       <Animated.Image
-        source={getImage(boardState.value[row][col])}
+        source={getImage(boardState[row][col])}
         style={chessPiece}
       />
     </PanGestureHandler>
@@ -180,10 +186,12 @@ export default ChessPiece;
 
 type ChessSquareProps = {
   board: {square: string}[][];
-  boardState: SharedValue<FenPosition[][]>;
+  boardState: FenPosition[][];
   row: number;
   col: number;
   value: string;
   squareToHighlight: SharedValue<number>;
   trueIndex: number;
+  onPieceDrop: (sourceSquare: Square, targetSquare: Square) => boolean;
+  position: {x: number; y: number};
 };

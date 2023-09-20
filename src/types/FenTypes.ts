@@ -12,3 +12,8 @@ export type FenPosition =
   | 'K'
   | 'k'
   | '8';
+
+export type Piece = {
+  color: 'white' | 'black';
+  position: FenPosition;
+};

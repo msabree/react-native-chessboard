@@ -1,1 +1,2 @@
-export type {FenPosition} from './FenTypes';
+export type {FenPosition, Piece} from './FenTypes';
+export type {Square} from './SquareTypes';

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useSharedValue} from 'react-native-reanimated';
-import ChessSquare from '../ChessPiece/ChessPiece';
-import {FenPosition} from '../../types';
+import ChessPiece from '../ChessPiece/ChessPiece';
+import {FenPosition, Square} from '../../types';
 import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
 import {
   COLUMN_LABELS,
@@ -9,12 +9,15 @@ import {
   MARGIN,
   ROW_LENGTH,
 } from '../../constants';
-import {getPosition} from '../../utils';
+import {fenTo2dArray, getPosition} from '../../utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const SIZE = Dimensions.get('window').width / COLUMN_LENGTH - MARGIN;
 
-const Chessboard = () => {
+const Chessboard = ({
+  startingFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
+  onPieceDrop,
+}: ChessBoardProps) => {
   const board: {square: string}[][] = [];
   for (let i = 0; i < COLUMN_LENGTH; i++) {
     const rows = [];
@@ -24,37 +27,11 @@ const Chessboard = () => {
     board.push(rows);
   }
 
-  // Fen starting position => rnbqkbnr / pppppppp / 8 / 8 / 8 / 8 / PPPPPPPP / RNBQKBNR;
-  const boardState = useSharedValue<FenPosition[][]>([
-    ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-    ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-    ['8', '8', '8', '8', '8', '8', '8', '8'],
-    ['8', '8', '8', '8', '8', '8', '8', '8'],
-    ['8', '8', '8', '8', '8', '8', '8', '8'],
-    ['8', '8', '8', '8', '8', '8', '8', '8'],
-    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-    ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
-  ]);
+  const [boardState, setBoardState] = useState<FenPosition[][]>(
+    fenTo2dArray(startingFen),
+  );
 
   const squareToHighlight = useSharedValue<number>(-1);
-
-  // const chessSquare = useAnimatedStyle((index: any) => {
-  //   const zIndex = isDragging.value ? 100 : 1;
-  //   const borderColor = isDragging.value ? 'red' : 'black';
-  //   const backgroundColor = isHovered.value ? 'green' : 'transparent';
-
-  //   return {
-  //     position: 'absolute',
-  //     margin: MARGIN * 2,
-  //     borderWidth: 1,
-  //     borderColor,
-  //     width: SIZE,
-  //     height: SIZE,
-  //     // backgroundColor,
-  //     // transform: [{translateX: position.x}, {translateY: position.y}],
-  //     zIndex: 1,
-  //   };
-  // });
 
   return (
     <GestureHandlerRootView>
@@ -71,9 +48,9 @@ const Chessboard = () => {
         }),
       )}
       {/* Overlay of chess pieces */}
-      {boardState.value.map((row, index) =>
+      {boardState.map((row, index) =>
         row.map((square, idx) => (
-          <ChessSquare
+          <ChessPiece
             key={`${square}${index}${idx}`}
             board={board}
             boardState={boardState}
@@ -82,6 +59,8 @@ const Chessboard = () => {
             squareToHighlight={squareToHighlight}
             value={square}
             trueIndex={index * COLUMN_LENGTH + idx}
+            onPieceDrop={onPieceDrop}
+            position={getPosition(index * COLUMN_LENGTH + idx)}
           />
         )),
       )}
@@ -89,16 +68,10 @@ const Chessboard = () => {
       <Pressable
         style={{position: 'absolute', bottom: 0, right: 200}}
         onPress={() => {
-          boardState.value = [
-            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['8', '8', '8', '8', '8', '8', '8', '8'],
-            ['8', '8', '8', '8', '8', '8', '8', '8'],
-            ['8', '8', '8', '8', '8', '8', '8', '8'],
-            ['8', '8', '8', '8', '8', '8', '8', '8'],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
-          ];
+          'worklet';
+
+          console.log('clicked');
+          setBoardState(fenTo2dArray(startingFen));
         }}>
         <Text>Reset</Text>
       </Pressable>
@@ -119,3 +92,8 @@ const styles = (idx: number, index: number, position: {x: number; y: number}) =>
       transform: [{translateX: position.x}, {translateY: position.y}],
     },
   });
+
+type ChessBoardProps = {
+  startingFen?: string;
+  onPieceDrop: (sourceSquare: Square, targetSquare: Square) => boolean;
+};

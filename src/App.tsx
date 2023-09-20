@@ -6,17 +6,9 @@
  */
 
 import React from 'react';
-// import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native';
-
+import {SafeAreaView, StyleSheet, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import Chessboard from './src/components/Chessboard/Chessboard';
+import Chessboard from './components/Chessboard/Chessboard';
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -27,24 +19,29 @@ function App(): JSX.Element {
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar
+      {/* <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <View
-        style={{
-          backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        }}>
-        <Chessboard />
+      /> */}
+      <View style={styles.sectionContainer}>
+        <Chessboard
+          onPieceDrop={(startingSquareName: string, squareName: string) => {
+            'worklet';
+
+            console.log(startingSquareName, squareName);
+            return true;
+          }}
+        />
       </View>
     </SafeAreaView>
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const styles = StyleSheet.create({
+  GestureHandlerRootView: {flex: 1},
   sectionContainer: {
     marginTop: 32,
+    // paddingHorizontal: 24,
   },
   sectionTitle: {
     fontSize: 24,
