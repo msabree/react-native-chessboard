@@ -10,6 +10,7 @@ import {
   ROW_LENGTH,
 } from '../../constants';
 import {getPosition} from '../../utils';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const SIZE = Dimensions.get('window').width / COLUMN_LENGTH - MARGIN;
 
@@ -56,7 +57,7 @@ const Chessboard = () => {
   // });
 
   return (
-    <>
+    <GestureHandlerRootView>
       {/* Underlay of chessboard */}
       {board.map((row, index) =>
         row.map((square, idx) => {
@@ -101,7 +102,7 @@ const Chessboard = () => {
         }}>
         <Text>Reset</Text>
       </Pressable>
-    </>
+    </GestureHandlerRootView>
   );
 };
 
