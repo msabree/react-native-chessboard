@@ -1,9 +1,6 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
-import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-} from 'react-native-gesture-handler';
+import {PanGestureHandler} from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
   withSpring,
@@ -25,9 +22,8 @@ const ChessPiece = ({
   col,
   squareToHighlight,
   value,
+  trueIndex,
 }: ChessSquareProps) => {
-  const trueIndex = row * COLUMN_LENGTH + col;
-
   const position = getPosition(trueIndex);
   const translateX = useSharedValue(position.x);
   const translateY = useSharedValue(position.y);
@@ -48,6 +44,13 @@ const ChessPiece = ({
       } else {
         isHovered.value = false;
       }
+    },
+  );
+
+  useAnimatedReaction(
+    () => trueIndex,
+    (index, oldIndex) => {
+      console.log('wtf', index, oldIndex);
     },
   );
 
@@ -105,6 +108,8 @@ const ChessPiece = ({
 
         isDragging.value = false;
         isHovered.value = false;
+
+        trueIndex = square;
       } else {
         // spring back to starting position
         translateX.value = withSpring(position.x);
@@ -162,14 +167,12 @@ const ChessPiece = ({
     // <Animated.View key={board[row][col].square} style={chessSquare} />
     // <Animated.View key={board[row][col].square} style={chessSquare}>
     // {/* </Animated.View> */}
-    <GestureHandlerRootView>
-      <PanGestureHandler onGestureEvent={panGesture}>
-        <Animated.Image
-          source={getImage(boardState.value[row][col])}
-          style={chessPiece}
-        />
-      </PanGestureHandler>
-    </GestureHandlerRootView>
+    <PanGestureHandler onGestureEvent={panGesture}>
+      <Animated.Image
+        source={getImage(boardState.value[row][col])}
+        style={chessPiece}
+      />
+    </PanGestureHandler>
   );
 };
 
@@ -182,4 +185,5 @@ type ChessSquareProps = {
   col: number;
   value: string;
   squareToHighlight: SharedValue<number>;
+  trueIndex: number;
 };

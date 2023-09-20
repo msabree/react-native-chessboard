@@ -80,6 +80,7 @@ const Chessboard = () => {
             col={idx}
             squareToHighlight={squareToHighlight}
             value={square}
+            trueIndex={index * COLUMN_LENGTH + idx}
           />
         )),
       )}
