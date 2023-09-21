@@ -4,6 +4,8 @@
 
 <img src="./media/iPhoneChessboard.png" alt="react chessboard" width="300">
 
+</div>
+
 # What is react-native-chess-board?
 react-native-chess-board is a react native based implementation of https://www.npmjs.com/package/react-chessboard
 
