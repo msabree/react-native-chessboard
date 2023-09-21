@@ -25,6 +25,7 @@ function App(): JSX.Element {
       /> */}
       <View style={styles.sectionContainer}>
         <Chessboard
+          orientation={'b'}
           onPieceDrop={(startingSquareName: string, squareName: string) => {
             'worklet';
 

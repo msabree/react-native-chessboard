@@ -11,11 +11,13 @@ import {
 } from '../../constants';
 import {fenTo2dArray, getPosition} from '../../utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {flipBoard} from '../../utils/flipBoard';
 
 const SIZE = Dimensions.get('window').width / COLUMN_LENGTH - MARGIN;
 
 const Chessboard = ({
-  startingFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
+  position = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
+  orientation = 'w',
   onPieceDrop,
 }: ChessBoardProps) => {
   const board: {square: string}[][] = [];
@@ -28,32 +30,35 @@ const Chessboard = ({
   }
 
   const [boardState, setBoardState] = useState<FenPosition[][]>(
-    fenTo2dArray(startingFen),
+    fenTo2dArray(position),
   );
 
   const squareToHighlight = useSharedValue<number>(-1);
+  const boardOriented = orientation === 'w' ? board : flipBoard(board);
+  const boardStateOriented =
+    orientation === 'w' ? boardState : flipBoard(boardState);
 
   return (
     <GestureHandlerRootView>
       {/* Underlay of chessboard */}
-      {board.map((row, index) =>
+      {boardOriented.map((row, index) =>
         row.map((square, idx) => {
-          const position = getPosition(index * COLUMN_LENGTH + idx);
+          const chessPiecePosition = getPosition(index * COLUMN_LENGTH + idx);
           return (
             <View
               key={square.square}
-              style={styles(idx, index, position).chessSquare}
+              style={styles(idx, index, chessPiecePosition).chessSquare}
             />
           );
         }),
       )}
       {/* Overlay of chess pieces */}
-      {boardState.map((row, index) =>
+      {boardStateOriented.map((row, index) =>
         row.map((square, idx) => (
           <ChessPiece
             key={`${square}${index}${idx}`}
-            board={board}
-            boardState={boardState}
+            board={boardOriented}
+            boardState={boardStateOriented}
             row={index}
             col={idx}
             squareToHighlight={squareToHighlight}
@@ -66,12 +71,12 @@ const Chessboard = ({
       )}
 
       <Pressable
-        style={{position: 'absolute', bottom: 0, right: 200}}
+        style={mainStyles.resetButton}
         onPress={() => {
           'worklet';
 
           console.log('clicked');
-          setBoardState(fenTo2dArray(startingFen));
+          setBoardState(fenTo2dArray(position));
         }}>
         <Text>Reset</Text>
       </Pressable>
@@ -93,7 +98,12 @@ const styles = (idx: number, index: number, position: {x: number; y: number}) =>
     },
   });
 
+const mainStyles = StyleSheet.create({
+  resetButton: {position: 'absolute', bottom: 0, right: 200},
+});
+
 type ChessBoardProps = {
-  startingFen?: string;
+  position?: string;
+  orientation?: 'w' | 'b';
   onPieceDrop: (sourceSquare: Square, targetSquare: Square) => boolean;
 };
