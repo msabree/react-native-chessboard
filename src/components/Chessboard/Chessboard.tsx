@@ -17,7 +17,7 @@ const SIZE = Dimensions.get('window').width / COLUMN_LENGTH - MARGIN;
 
 const Chessboard = ({
   position = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
-  orientation = 'w',
+  boardOrientation = 'white',
   onPieceDrop,
 }: ChessBoardProps) => {
   const board: {square: string}[][] = [];
@@ -34,9 +34,9 @@ const Chessboard = ({
   );
 
   const squareToHighlight = useSharedValue<number>(-1);
-  const boardOriented = orientation === 'w' ? board : flipBoard(board);
+  const boardOriented = boardOrientation === 'white' ? board : flipBoard(board);
   const boardStateOriented =
-    orientation === 'w' ? boardState : flipBoard(boardState);
+    boardOrientation === 'white' ? boardState : flipBoard(boardState);
 
   return (
     <GestureHandlerRootView>
@@ -104,6 +104,6 @@ const mainStyles = StyleSheet.create({
 
 type ChessBoardProps = {
   position?: string;
-  orientation?: 'w' | 'b';
+  boardOrientation?: 'white' | 'black';
   onPieceDrop: (sourceSquare: Square, targetSquare: Square) => boolean;
 };
