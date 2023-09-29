@@ -8,6 +8,7 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedReaction,
   SharedValue,
+  cancelAnimation,
 } from 'react-native-reanimated';
 import {FenPosition, Square} from '../../types';
 import {COLUMN_LENGTH, MARGIN, columns, rows} from '../../constants';
@@ -24,6 +25,7 @@ const ChessPiece = ({
   value,
   trueIndex,
   onPieceDrop,
+  onSquareClick,
   position,
 }: ChessSquareProps) => {
   console.log(position.x);
@@ -71,22 +73,43 @@ const ChessPiece = ({
 
   const panGesture = useAnimatedGestureHandler({
     onStart: (_event, ctx) => {
-      ctx.startX = translateX.value;
-      ctx.startY = translateY.value;
-      isDragging.value = true;
-    },
-    onActive: (event, ctx) => {
-      translateX.value = ctx.startX + event.translationX;
-      translateY.value = ctx.startY + event.translationY;
-
       const center = {
         x: translateX.value + SIZE / 2,
         y: translateY.value + SIZE / 2,
       };
-
       const square = getSquare(center.x, center.y);
+      const squareName = getSquareName(square);
 
-      squareToHighlight.value = square;
+      if (!squareName || onSquareClick(squareName) === false) {
+        console.log('first');
+        cancelAnimation(translateX);
+        cancelAnimation(translateY);
+      } else {
+        ctx.startX = translateX.value;
+        ctx.startY = translateY.value;
+        isDragging.value = true;
+      }
+    },
+    onActive: (event, ctx) => {
+      const center = {
+        x: translateX.value + SIZE / 2,
+        y: translateY.value + SIZE / 2,
+      };
+      const square = getSquare(center.x, center.y);
+      // const squareName = getSquareName(square);
+      //@ts-ignore
+      const startingSquare = getSquare(ctx.startX, ctx.startY);
+      const startingSquareName = getSquareName(startingSquare);
+
+      if (!startingSquareName || onSquareClick(startingSquareName) === false) {
+        cancelAnimation(translateX);
+        cancelAnimation(translateY);
+      } else {
+        translateX.value = ctx.startX + event.translationX;
+        translateY.value = ctx.startY + event.translationY;
+
+        squareToHighlight.value = square;
+      }
     },
     onFinish: (event, ctx) => {
       squareToHighlight.value = -1;
@@ -150,14 +173,14 @@ const ChessPiece = ({
     };
   });
   const chessSquare = useAnimatedStyle(() => {
-    const borderColor = isDragging.value ? 'red' : 'black';
+    // const borderColor = isDragging.value ? 'red' : 'black';
     const backgroundColor = isHovered.value ? 'green' : 'transparent';
 
     return {
       position: 'absolute',
-      margin: MARGIN * 2,
-      borderWidth: 1,
-      borderColor,
+      // margin: MARGIN * 2,
+      // borderWidth: 1,
+      // borderColor,
       width: SIZE,
       height: SIZE,
       backgroundColor,
@@ -193,5 +216,6 @@ type ChessSquareProps = {
   squareToHighlight: SharedValue<number>;
   trueIndex: number;
   onPieceDrop: (sourceSquare: Square, targetSquare: Square) => boolean;
+  onSquareClick: (square: Square) => boolean;
   position: {x: number; y: number};
 };

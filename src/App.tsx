@@ -32,6 +32,22 @@ function App(): JSX.Element {
             console.log(startingSquareName, squareName);
             return true;
           }}
+          onSquareClick={(squareName: string) => {
+            'worklet';
+
+            console.log(squareName);
+            return squareName === 'a1' ? true : false;
+          }}
+          customDarkSquareStyle={{backgroundColor: '#60688e'}}
+          customLightSquareStyle={{backgroundColor: '#d3d7ec'}}
+          customSquareStyles={
+            new Map<string, object>([
+              ['a1', {backgroundColor: 'red'}],
+              ['a2', {backgroundColor: 'blue'}],
+              ['a3', {backgroundColor: 'green'}],
+            ])
+          }
+          // customBoardStyle={{backgroundColor: 'red'}}
         />
       </View>
     </SafeAreaView>

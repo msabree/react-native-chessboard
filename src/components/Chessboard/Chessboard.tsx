@@ -19,6 +19,11 @@ const Chessboard = ({
   position = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
   boardOrientation = 'white',
   onPieceDrop,
+  onSquareClick = () => true,
+  customDarkSquareStyle = {backgroundColor: 'black'},
+  customLightSquareStyle = {backgroundColor: 'white'},
+  customSquareStyles = new Map<string, object>(),
+  customBoardStyle = {},
 }: ChessBoardProps) => {
   const board: {square: string}[][] = [];
   for (let i = 0; i < COLUMN_LENGTH; i++) {
@@ -34,7 +39,9 @@ const Chessboard = ({
   );
 
   const squareToHighlight = useSharedValue<number>(-1);
-  const boardOriented = boardOrientation === 'white' ? board : flipBoard(board);
+  const boardOriented: {
+    square: string;
+  }[][] = boardOrientation === 'white' ? board : flipBoard(board);
   const boardStateOriented =
     boardOrientation === 'white' ? boardState : flipBoard(boardState);
 
@@ -47,7 +54,14 @@ const Chessboard = ({
           return (
             <View
               key={square.square}
-              style={styles(idx, index, chessPiecePosition).chessSquare}
+              style={{
+                ...((idx + index) % 2 === 0
+                  ? customLightSquareStyle
+                  : customDarkSquareStyle),
+                ...styles(idx, index, chessPiecePosition).chessSquare,
+                ...customSquareStyles.get(square.square),
+                // ...customBoardStyle, No board to style
+              }}
             />
           );
         }),
@@ -65,6 +79,7 @@ const Chessboard = ({
             value={square}
             trueIndex={index * COLUMN_LENGTH + idx}
             onPieceDrop={onPieceDrop}
+            onSquareClick={onSquareClick}
             position={getPosition(index * COLUMN_LENGTH + idx)}
           />
         )),
@@ -93,7 +108,6 @@ const styles = (idx: number, index: number, position: {x: number; y: number}) =>
       width: SIZE,
       height: SIZE,
       margin: MARGIN * 2,
-      backgroundColor: (idx + index) % 2 === 0 ? 'white' : 'black',
       transform: [{translateX: position.x}, {translateY: position.y}],
     },
   });
@@ -106,4 +120,9 @@ type ChessBoardProps = {
   position?: string;
   boardOrientation?: 'white' | 'black';
   onPieceDrop: (sourceSquare: Square, targetSquare: Square) => boolean;
+  onSquareClick: (square: Square) => boolean;
+  customDarkSquareStyle?: object;
+  customLightSquareStyle?: object;
+  customSquareStyles?: Map<string, object>;
+  customBoardStyle?: object;
 };
