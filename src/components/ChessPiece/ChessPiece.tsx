@@ -67,7 +67,7 @@ const ChessPiece = ({
   useAnimatedReaction(
     () => trueIndex,
     (index, oldIndex) => {
-      console.log('wtf', index, oldIndex);
+      console.log(index, oldIndex);
     },
   );
 
