@@ -5,9 +5,10 @@ module.exports = {
     'node_modules/(?!(@react-native|react-native|react-native-reanimated)/)',
   ],
   collectCoverageFrom: [
-    '**/*.{js,jsx,ts,tsx}',
+    'src/**/*.{js,jsx,ts,tsx}',
     '!**/node_modules/**',
     '!**/types/**',
     '!src/**/*.d.ts',
+    '!src/App.tsx',
   ],
 };
