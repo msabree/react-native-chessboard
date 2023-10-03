@@ -30,3 +30,13 @@ yarn add react-native-chess-board
 | onPieceDrop                   | function: (sourceSquare, targetSquare) => true             | returns [true, false]                              | User function that is run when piece is dropped on a square. Must return whether the move was successful or not. This return value does not control whether or not the piece was placed (as that is controlled by the `position` prop) but instead controls premove logic.                                                                                                                             
 | onSquareClick                   | function: (sourceSquare) => {}             |                              | User function that is run when piece is tapped ('clicked').                                                                                                                                                                                            |
 | position                   | Board will render the starting FEN position.            |                              | FEN string notating where the chess pieces are on the board.                                                                                                                                                                                                                                            |
+
+## Contributing
+
+See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+
+## License
+
+MIT
+
+---
