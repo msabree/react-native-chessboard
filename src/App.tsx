@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import Chessboard from './components/Chessboard/Chessboard';
+import Chessboard from 'react-native-chessboardjs';
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -10,13 +10,11 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const [isBoardFlipped, _setIsBoardFlipped] = React.useState(true);
-
   return (
     <SafeAreaView style={backgroundStyle}>
       <View style={styles.sectionContainer}>
         <Chessboard
-          isBoardFlipped={isBoardFlipped}
+          boardOrientation={'black'}
           onPieceDrop={(startingSquareName: string, squareName: string) => {
             'worklet';
 
