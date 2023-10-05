@@ -35,28 +35,20 @@ function App(): JSX.Element {
           }}
           customDarkSquareStyle={{backgroundColor: '#60688e'}}
           customLightSquareStyle={{backgroundColor: '#d3d7ec'}}
-          customSquareStyles={
-            new Map<string, object>([
-              [
-                'e3',
-                {
-                  backgroundColor: '#b3b4c36e',
-                  height: 15,
-                  width: 15,
-                  borderRadius: 50,
-                },
-              ],
-              [
-                'e4',
-                {
-                  backgroundColor: '#b3b4c36e',
-                  height: 15,
-                  width: 15,
-                  borderRadius: 50,
-                },
-              ],
-            ])
-          }
+          customSquareStyles={{
+            e3: {
+              backgroundColor: '#b3b4c36e',
+              height: 15,
+              width: 15,
+              borderRadius: 50,
+            },
+            e4: {
+              backgroundColor: '#b3b4c36e',
+              height: 15,
+              width: 15,
+              borderRadius: 50,
+            }
+          }}
         />
       </View>
     </SafeAreaView>
