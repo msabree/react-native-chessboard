@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -17,33 +18,60 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const [isBoardFlipped, _setIsBoardFlipped] = React.useState(true);
+  const [position, _setPosition] = React.useState<string>(
+    'rnbqkbnr/pppppppp/8/8/8/8/PRPPPPPP/PP1QKBNR',
+  );
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <View style={styles.sectionContainer}>
         <Chessboard
-          boardOrientation={'black'}
+          isBoardFlipped={isBoardFlipped}
           onPieceDrop={(startingSquareName: string, squareName: string) => {
             'worklet';
 
-            console.log(startingSquareName, squareName);
+            console.log(`onPieceDrop:=>${startingSquareName}-->${squareName}`);
             return true;
           }}
           onSquareClick={(squareName: string) => {
             'worklet';
 
-            console.log(squareName);
-            return squareName === 'a1' ? true : false;
+            console.log(`onSquareClick:=>${squareName}`);
+            return true;
           }}
+          isDraggablePiece={(squareName: string) => {
+            'worklet';
+
+            console.log(`isDraggablePiece:=>${squareName}`);
+            return true;
+          }}
+          position={position}
           customDarkSquareStyle={{backgroundColor: '#60688e'}}
           customLightSquareStyle={{backgroundColor: '#d3d7ec'}}
           customSquareStyles={
             new Map<string, object>([
-              ['a1', {backgroundColor: 'red'}],
-              ['a2', {backgroundColor: 'blue'}],
-              ['a3', {backgroundColor: 'green'}],
+              [
+                'e3',
+                {
+                  backgroundColor: '#b3b4c36e',
+                  opacity: 0.5,
+                  height: 15,
+                  width: 15,
+                  borderRadius: 50,
+                },
+              ],
+              [
+                'e4',
+                {
+                  backgroundColor: '#b3b4c36e',
+                  height: 15,
+                  width: 15,
+                  borderRadius: 50,
+                },
+              ],
             ])
           }
-          // customBoardStyle={{backgroundColor: 'red'}}
         />
       </View>
     </SafeAreaView>
@@ -54,7 +82,6 @@ const styles = StyleSheet.create({
   GestureHandlerRootView: {flex: 1},
   sectionContainer: {
     marginTop: 32,
-    // paddingHorizontal: 24,
   },
   sectionTitle: {
     fontSize: 24,
