@@ -1,11 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -19,9 +11,6 @@ function App(): JSX.Element {
   };
 
   const [isBoardFlipped, _setIsBoardFlipped] = React.useState(true);
-  const [position, _setPosition] = React.useState<string>(
-    'rnbqkbnr/pppppppp/8/8/8/8/PRPPPPPP/PP1QKBNR',
-  );
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -46,7 +35,6 @@ function App(): JSX.Element {
             console.log(`isDraggablePiece:=>${squareName}`);
             return true;
           }}
-          position={position}
           customDarkSquareStyle={{backgroundColor: '#60688e'}}
           customLightSquareStyle={{backgroundColor: '#d3d7ec'}}
           customSquareStyles={
@@ -55,7 +43,6 @@ function App(): JSX.Element {
                 'e3',
                 {
                   backgroundColor: '#b3b4c36e',
-                  opacity: 0.5,
                   height: 15,
                   width: 15,
                   borderRadius: 50,
