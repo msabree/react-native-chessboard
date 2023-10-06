@@ -2583,6 +2583,11 @@ char-regex@^1.0.2:
   resolved "https://registry.yarnpkg.com/char-regex/-/char-regex-1.0.2.tgz#d744358226217f981ed58f479b1d6bcc29545dcf"
   integrity sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==
 
+chess.js@^1.0.0-beta.6:
+  version "1.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/chess.js/-/chess.js-1.0.0-beta.6.tgz#c8bd5d26890421472fba2bbb0819820accd084a9"
+  integrity sha512-sqBfX1VL3csSyqVM5ogbKA+aRlZyWDh276ruWXphwI0lDUMs7iYjZs29BOi49f7mXeunJE7cdfnIZhihsyLnsA==
+
 ci-info@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-2.0.0.tgz#67a9e964be31a51e15e5010d58e6f12834002f46"
@@ -5821,7 +5826,7 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-native-chessboardjs@/Users/makeen/dev/react-native-chessboardjs:
+"react-native-chessboardjs@file:../react-native-chessboardjs":
   version "0.1.0"
   dependencies:
     react-native-gesture-handler "^2.12.1"

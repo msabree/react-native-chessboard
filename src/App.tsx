@@ -1,53 +1,85 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Chessboard from 'react-native-chessboardjs';
+import {Chess, Square} from 'chess.js';
 
 function App(): JSX.Element {
+  const [chessGame] = useState(new Chess());
+  const [optionSquares, setOptionSquares] = useState({});
+  const [moveFrom, setMoveFrom] = useState('');
+
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const resetFirstMove = (square: Square) => {
+    const hasOptions = getMoveOptions(square);
+    if (hasOptions) {
+      setMoveFrom(square);
+    }
+  };
+
+  const getMoveOptions = (square: Square) => {
+    const moves = chessGame.moves({
+      square,
+      verbose: true,
+    });
+    if (moves.length === 0) {
+      return false;
+    }
+
+    const newSquares = {} as any;
+    moves.map(move => {
+      newSquares[move.to] = {
+        backgroundColor: 'green',
+        height: 15,
+        width: 15,
+        borderRadius: 50,
+      };
+      return move;
+    });
+    setOptionSquares(newSquares);
+    return true;
+  };
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <View style={styles.sectionContainer}>
         <Chessboard
-          boardOrientation={'black'}
-          onPieceDrop={(startingSquareName: string, squareName: string) => {
-            'worklet';
-
-            console.log(`onPieceDrop:=>${startingSquareName}-->${squareName}`);
-            return true;
-          }}
-          onSquareClick={(squareName: string) => {
-            'worklet';
-
-            console.log(`onSquareClick:=>${squareName}`);
-            return true;
-          }}
-          isDraggablePiece={(squareName: string) => {
-            'worklet';
-
-            console.log(`isDraggablePiece:=>${squareName}`);
-            return true;
-          }}
-          customDarkSquareStyle={{backgroundColor: '#60688e'}}
-          customLightSquareStyle={{backgroundColor: '#d3d7ec'}}
+          position={chessGame.fen()}
           customSquareStyles={{
-            e3: {
-              backgroundColor: '#b3b4c36e',
-              height: 15,
-              width: 15,
-              borderRadius: 50,
-            },
-            e4: {
-              backgroundColor: '#b3b4c36e',
-              height: 15,
-              width: 15,
-              borderRadius: 50,
+            ...optionSquares,
+          }}
+          onPieceDrop={() => {
+            return true;
+          }}
+          onSquareClick={(square: Square) => {
+            if (!moveFrom) {
+              resetFirstMove(square);
+              return false;
             }
+
+            try {
+              chessGame.move({
+                from: moveFrom,
+                to: square,
+                promotion: 'q', // always promote to queen for example simplicity
+              });
+              setMoveFrom('');
+              setOptionSquares({});
+              return true;
+            } catch (e) {
+              console.log(e);
+              // invalid move
+              resetFirstMove(square);
+            }
+            return false;
+          }}
+          isDraggablePiece={() => {
+            return true;
           }}
         />
       </View>

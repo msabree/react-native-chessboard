@@ -10,9 +10,10 @@
     "test": "jest --coverage"
   },
   "dependencies": {
+    "chess.js": "^1.0.0-beta.6",
     "react": "18.2.0",
     "react-native": "0.72.4",
-    "react-native-chessboardjs": "<local path here>"
+    "react-native-chessboardjs": "/Users/msabree/dev/react-native-chessboardjs"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
