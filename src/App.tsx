@@ -53,8 +53,19 @@ function App(): JSX.Element {
           customSquareStyles={{
             ...optionSquares,
           }}
-          onPieceDrop={() => {
-            return true;
+          onPieceDrop={(sourceSquare, targetSquare) => {
+            setOptionSquares({});
+            try {
+              chessGame.move({
+                from: sourceSquare,
+                to: targetSquare,
+                promotion: 'q', // always promote to queen for example simplicity
+              });
+              return true;
+            } catch (e) {
+              console.log(e);
+            }
+            return false;
           }}
           onSquareClick={(square: Square) => {
             if (!moveFrom) {
@@ -79,6 +90,9 @@ function App(): JSX.Element {
             return false;
           }}
           isDraggablePiece={() => {
+            return true;
+          }}
+          onPromotionCheck={() => {
             return true;
           }}
         />
