@@ -92,8 +92,14 @@ function App(): JSX.Element {
           isDraggablePiece={() => {
             return true;
           }}
-          onPromotionCheck={() => {
-            return true;
+          onPromotionCheck={(_startingSquareName, targetSquare, piece) => {
+            if (
+              (targetSquare[1] === '8' || targetSquare[1] === '1') &&
+              (piece as unknown as string)[1] === 'p'
+            ) {
+              return true;
+            }
+            return false;
           }}
         />
       </View>
