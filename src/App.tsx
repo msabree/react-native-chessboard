@@ -49,6 +49,8 @@ function App(): JSX.Element {
     <SafeAreaView style={backgroundStyle}>
       <View style={styles.sectionContainer}>
         <Chessboard
+          customDarkSquareStyle={styles.customDarkSquareStyle}
+          customLightSquareStyle={styles.customLightSquareStyle}
           position={chessGame.fen()}
           customSquareStyles={{
             ...optionSquares,
@@ -108,7 +110,12 @@ function App(): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  GestureHandlerRootView: {flex: 1},
+  customDarkSquareStyle: {
+    backgroundColor: '#D2691E',
+  },
+  customLightSquareStyle: {
+    backgroundColor: '#DEB887',
+  },
   sectionContainer: {
     marginTop: 32,
   },
