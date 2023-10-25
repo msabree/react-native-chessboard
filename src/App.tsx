@@ -85,14 +85,13 @@ function App(): JSX.Element {
               setOptionSquares({});
               return true;
             } catch (e) {
-              console.log(e);
               // invalid move
               resetFirstMove(square);
             }
             return false;
           }}
-          isDraggablePiece={() => {
-            return true;
+          isDraggablePiece={({piece}: any) => {
+            return chessGame.turn() === piece[0];
           }}
           onPromotionCheck={(_startingSquareName, targetSquare, piece) => {
             if (
