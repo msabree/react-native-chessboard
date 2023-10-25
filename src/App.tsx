@@ -3,6 +3,7 @@ import {SafeAreaView, StyleSheet, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Chessboard from 'react-native-chessboardjs';
 import {Chess, Square} from 'chess.js';
+import {Piece} from 'react-native-chessboardjs/lib/typescript/src/@types';
 
 function App(): JSX.Element {
   const [chessGame] = useState(new Chess());
@@ -55,13 +56,17 @@ function App(): JSX.Element {
           customSquareStyles={{
             ...optionSquares,
           }}
-          onPieceDrop={(sourceSquare, targetSquare) => {
+          onPieceDrop={(
+            sourceSquare: Square,
+            targetSquare: Square,
+            piece: Piece,
+          ) => {
             setOptionSquares({});
             try {
               chessGame.move({
                 from: sourceSquare,
                 to: targetSquare,
-                promotion: 'q', // always promote to queen for example simplicity
+                promotion: piece[1],
               });
               return true;
             } catch (e) {
@@ -79,7 +84,7 @@ function App(): JSX.Element {
               chessGame.move({
                 from: moveFrom,
                 to: square,
-                promotion: 'q', // always promote to queen for example simplicity
+                promotion: 'q',
               });
               setMoveFrom('');
               setOptionSquares({});
@@ -90,13 +95,13 @@ function App(): JSX.Element {
             }
             return false;
           }}
-          isDraggablePiece={({piece}: any) => {
+          isDraggablePiece={({piece}) => {
             return chessGame.turn() === piece[0];
           }}
           onPromotionCheck={(_startingSquareName, targetSquare, piece) => {
             if (
               (targetSquare[1] === '8' || targetSquare[1] === '1') &&
-              (piece as unknown as string)[1] === 'p'
+              piece[1] === 'p'
             ) {
               return true;
             }
