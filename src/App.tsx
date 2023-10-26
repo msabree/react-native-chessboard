@@ -59,9 +59,8 @@ function App(): JSX.Element {
           onPieceDrop={(
             sourceSquare: Square,
             targetSquare: Square,
-            piece?: Piece,
+            piece: Piece,
           ) => {
-            console.log('onPieceDrop', sourceSquare, targetSquare, piece);
             try {
               chessGame.move({
                 from: sourceSquare,
@@ -71,9 +70,7 @@ function App(): JSX.Element {
               setMoveFrom('');
               setOptionSquares({});
               return true;
-            } catch (e) {
-              console.log(e);
-            }
+            } catch (e) {}
             return false;
           }}
           onSquareClick={(square: Square) => {
@@ -86,7 +83,8 @@ function App(): JSX.Element {
               chessGame.move({
                 from: moveFrom,
                 to: square,
-                promotion: 'q', // never fired, handle by drop event :)
+                // use 'q' if not using selection modal
+                promotion: 'q', // this is handled by drop event if onPromotionCheck is set
               });
               setMoveFrom('');
               setOptionSquares({});
@@ -101,12 +99,16 @@ function App(): JSX.Element {
             return chessGame.turn() === piece[0];
           }}
           onPromotionCheck={(_startingSquareName, targetSquare, piece) => {
+            // do nothing on opponent turn
+            if (chessGame.turn() !== piece[0]) {
+              return false;
+            }
+
             const moveFromPiece = chessGame.get(moveFrom as Square);
             if (
               (targetSquare[1] === '8' || targetSquare[1] === '1') &&
               (piece[1] === 'p' || moveFromPiece?.type === 'p')
             ) {
-              console.log('promo');
               return true;
             }
             return false;
