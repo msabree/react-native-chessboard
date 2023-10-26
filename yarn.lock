@@ -5025,8 +5025,10 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-native-chessboardjs@../react-native-chessboardjs:
-  version "0.1.0"
+react-native-chessboardjs@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-chessboardjs/-/react-native-chessboardjs-0.2.0.tgz#8781423c77eb10b1662f26ffef5a33e7bfd57633"
+  integrity sha512-AnF7sdBQt2gtfoc4B/jDJYXqyYsyP1SLMjI5tStaaHX9xZzf5ytXwAhT6vENbc0OG0p2ebDceK1GjcexdoN+mw==
   dependencies:
     react-native-gesture-handler "^2.13.2"
     react-native-reanimated "^3.5.4"
