@@ -59,15 +59,17 @@ function App(): JSX.Element {
           onPieceDrop={(
             sourceSquare: Square,
             targetSquare: Square,
-            piece: Piece,
+            piece?: Piece,
           ) => {
-            setOptionSquares({});
+            console.log('onPieceDrop', sourceSquare, targetSquare, piece);
             try {
               chessGame.move({
                 from: sourceSquare,
                 to: targetSquare,
-                promotion: piece[1],
+                promotion: piece?.[1] ?? 'q',
               });
+              setMoveFrom('');
+              setOptionSquares({});
               return true;
             } catch (e) {
               console.log(e);
@@ -84,7 +86,7 @@ function App(): JSX.Element {
               chessGame.move({
                 from: moveFrom,
                 to: square,
-                promotion: 'q',
+                promotion: 'q', // never fired, handle by drop event :)
               });
               setMoveFrom('');
               setOptionSquares({});
@@ -99,10 +101,12 @@ function App(): JSX.Element {
             return chessGame.turn() === piece[0];
           }}
           onPromotionCheck={(_startingSquareName, targetSquare, piece) => {
+            const moveFromPiece = chessGame.get(moveFrom as Square);
             if (
               (targetSquare[1] === '8' || targetSquare[1] === '1') &&
-              piece[1] === 'p'
+              (piece[1] === 'p' || moveFromPiece?.type === 'p')
             ) {
+              console.log('promo');
               return true;
             }
             return false;
